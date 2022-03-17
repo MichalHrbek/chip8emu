@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SDL2;
+﻿using SDL2;
 
 namespace chip8emu.engine
 {
@@ -18,13 +15,11 @@ namespace chip8emu.engine
         public static void KeyDownCallback(SDL.SDL_Event e)
         {
             keysDown[(byte)e.key.keysym.sym] = true;
-            //Console.WriteLine(e.key.keysym.sym);
         }
 
         public static void KeyUpCallback(SDL.SDL_Event e)
         {
             keysDown[(byte)e.key.keysym.sym] = false;
-            //Console.WriteLine(e.key.keysym.sym);
         }
 
         public static bool isKeyDown(byte key)

@@ -17,6 +17,7 @@ namespace chip8emu
         ushort[] stack;
         ushort sp;
         public bool[] key;
+        bool screenFlag;
         Random r;
 
         byte[] fontset = new byte[] {
@@ -51,6 +52,7 @@ namespace chip8emu
             stack = new ushort[16];
             sp = 0;
             key = new bool[16];
+            screenFlag = true;
             r = new Random();
 
             for (int i = 0; i < 80; ++i)
@@ -66,6 +68,16 @@ namespace chip8emu
         public void emulateCycle(Object source, ElapsedEventArgs e)
         {
             emulateCycle();
+        }
+
+        public bool screenSchanged()
+        {
+            if (screenFlag)
+            {
+                screenFlag = false;
+                return true;
+            }
+            else return false;
         }
 
         public void emulateCycle()
@@ -247,6 +259,7 @@ namespace chip8emu
                                     if (gfx[posPixel] == 1)
                                         V[0xF] = 1; // set vf register
                                     gfx[posPixel] ^= 1;
+                                    screenFlag = true;
                                 }
                             }
                         }

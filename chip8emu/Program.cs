@@ -24,8 +24,7 @@ namespace chip8emu
                 return;
             }
 
-            IntPtr window = IntPtr.Zero;
-            window = SDL.SDL_CreateWindow("Chip8", SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED, 64 * scale, 32 * scale, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            IntPtr window = SDL.SDL_CreateWindow("Chip8", SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED, 64 * scale, 32 * scale, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
             IntPtr renderer = SDL.SDL_CreateRenderer(window, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
 
             SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -45,19 +44,22 @@ namespace chip8emu
                     vm.key[i] = engine.Input.isKeyDown((byte)keys[i]);
                 }
                 vm.emulateCycle();
-                for (int i = 0; i < vm.gfx.Length; i++)
+                if (vm.screenSchanged())
                 {
-                    SDL.SDL_Rect rect = new SDL.SDL_Rect() { x = (i % 64) * scale, y = (i / 64) * scale, h = scale, w = scale};
-                    SDL.SDL_SetRenderDrawColor(renderer, (byte)(vm.gfx[i] * displayColor.R), (byte)(vm.gfx[i] * displayColor.G), (byte)(vm.gfx[i] * displayColor.B), 255);
-                    SDL.SDL_RenderFillRect(renderer, ref rect);
+                    for (int i = 0; i < vm.gfx.Length; i++)
+                    {
+                        SDL.SDL_Rect rect = new SDL.SDL_Rect() { x = (i % 64) * scale, y = (i / 64) * scale, h = scale, w = scale};
+                        SDL.SDL_SetRenderDrawColor(renderer, (byte)(vm.gfx[i] * displayColor.R), (byte)(vm.gfx[i] * displayColor.G), (byte)(vm.gfx[i] * displayColor.B), 255);
+                        SDL.SDL_RenderFillRect(renderer, ref rect);
+                    }
+                    SDL.SDL_RenderPresent(renderer);
                 }
-                SDL.SDL_RenderPresent(renderer);
             }
 
             // Clean up.
             SDL.SDL_DestroyRenderer(renderer);
+            SDL.SDL_DestroyWindow(window);
             SDL.SDL_Quit();
-            Console.WriteLine("Hello World!");
         }
     }
 }

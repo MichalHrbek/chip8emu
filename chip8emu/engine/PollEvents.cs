@@ -1,7 +1,5 @@
-﻿using System;
-using SDL2;
+﻿using SDL2;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace chip8emu.engine
 {
@@ -9,7 +7,7 @@ namespace chip8emu.engine
     {
         public delegate void EventCallback(SDL.SDL_Event e);
 
-        public static Dictionary<SDL.SDL_EventType, List<EventCallback>> events = new Dictionary<SDL.SDL_EventType, List<EventCallback>>();
+        public static Dictionary<SDL.SDL_EventType, List<EventCallback>> events = new();
 
         public static void poll()
         {
