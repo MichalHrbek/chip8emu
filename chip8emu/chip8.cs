@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Timers;
 
 namespace chip8emu
@@ -91,7 +92,7 @@ namespace chip8emu
 
             if (sound_timer > 0)
             {
-                if (sound_timer == 1) Console.Beep(440, 100);
+                if (sound_timer == 1) new Thread(() => Console.Beep(440, 100)).Start(); ;
                 --sound_timer;
             }
 
@@ -101,6 +102,7 @@ namespace chip8emu
                     switch (opcode & 0x00FF)
                     {
                         case 0x00E0: // Clears the screen      
+                            screenFlag = true;
                             for (int i = 0; i < 64 * 32; ++i)
                                 gfx[i] = 0;
                             pc += 2;
@@ -321,9 +323,9 @@ namespace chip8emu
                             break;
 
                         case 0x0033: // FX33: Stores the Binary-coded decimal representation of VX at the addresses I, I + 1, and I + 2
-                            memory[I] = (byte)(V[(opc.X) >> 8] / 100);
-                            memory[I + 1] = (byte)(V[(opc.X) >> 8] / 10 % 10);
-                            memory[I + 2] = (byte)(V[opc.X >> 8] % 100 % 10);
+                            memory[I] = (byte)(V[(opc.X)] / 100);
+                            memory[I + 1] = (byte)(V[(opc.X)] / 10 % 10);
+                            memory[I + 2] = (byte)(V[opc.X] % 100 % 10);
                             pc += 2;
                             break;
 
