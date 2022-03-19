@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using SDL2;
+using chip8emu.engine;
 
 namespace chip8emu
 {
@@ -36,22 +37,22 @@ namespace chip8emu
             SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL.SDL_RenderClear(renderer);
 
-            engine.Input.SetupInput();
+            Input.SetupInput();
 
             bool shouldQuit = false;
 
-            engine.PollEvents.addCallback(SDL.SDL_EventType.SDL_QUIT, (SDL.SDL_Event e) => { shouldQuit = true; }); // Quit window event
+            PollEvents.addCallback(SDL.SDL_EventType.SDL_QUIT, (SDL.SDL_Event e) => { shouldQuit = true; }); // Quit window event
             while (!shouldQuit)
             {
 
                 DateTime start = DateTime.UtcNow;
-                engine.PollEvents.poll();
+                PollEvents.poll();
                 
-                if (engine.Input.isKeyDown((byte)SDL.SDL_Keycode.SDLK_ESCAPE)) load();
+                if (Input.wasKeyPressed((byte)SDL.SDL_Keycode.SDLK_ESCAPE)) load();
                 
                 for (int i = 0; i < vm.key.Length; i++)
                 {
-                    vm.key[i] = engine.Input.isKeyDown((byte)keys[i]);
+                    vm.key[i] = Input.isKeyDown((byte)keys[i]);
                 }
 
                 vm.emulateCycle();

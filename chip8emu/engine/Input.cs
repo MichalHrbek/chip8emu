@@ -5,6 +5,7 @@ namespace chip8emu.engine
     class Input
     {
         public static bool[] keysDown = new bool[256];
+        public static bool[] keysPressed = new bool[256];
 
         public static void SetupInput()
         {
@@ -12,19 +13,27 @@ namespace chip8emu.engine
             PollEvents.addCallback(SDL.SDL_EventType.SDL_KEYUP, KeyUpCallback);
         }
 
-        public static void KeyDownCallback(SDL.SDL_Event e)
+        static void KeyDownCallback(SDL.SDL_Event e)
         {
             keysDown[(byte)e.key.keysym.sym] = true;
         }
 
-        public static void KeyUpCallback(SDL.SDL_Event e)
+        static void KeyUpCallback(SDL.SDL_Event e)
         {
             keysDown[(byte)e.key.keysym.sym] = false;
+            keysPressed[(byte)e.key.keysym.sym] = true;
         }
 
         public static bool isKeyDown(byte key)
         {
             return keysDown[key];
+        }
+        
+        public static bool wasKeyPressed(byte key)
+        {
+            if (keysPressed[key]) keysPressed[key] = false;
+            else return false;
+            return true;
         }
     }
 }

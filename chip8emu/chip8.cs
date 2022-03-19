@@ -81,12 +81,16 @@ namespace chip8emu
             else return false;
         }
 
+        void unknownOpCode(ushort opcode)
+        {
+            Console.WriteLine("Unknown opcode: 0x{0}", opcode.ToString("X"));
+            pc += 2;
+        }
+
         public void emulateCycle()
         {
             opcode = (ushort)(memory[pc] << 8 | memory[pc + 1]);
             OpCode opc = new OpCode(opcode);
-
-            //Console.WriteLine(opcode.ToString("X"));
 
             if (delay_timer > 0) --delay_timer;
 
@@ -120,7 +124,7 @@ namespace chip8emu
                             break;
 
                         default:
-                            Console.WriteLine("Unknown opcode: 0x{0}", opcode.ToString("X"));
+                            unknownOpCode(opcode);
                             break;
                     }
                     break;
@@ -214,7 +218,7 @@ namespace chip8emu
                             break;
 
                         default:
-                            Console.WriteLine("Unknown opcode: 0x{0}", opcode.ToString("X"));
+                            unknownOpCode(opcode);
                             break;
                     }
                     break;
@@ -284,7 +288,7 @@ namespace chip8emu
                             break;
 
                         default:
-                            Console.WriteLine("Unknown opcode: 0x{0}", opcode.ToString("X"));
+                            unknownOpCode(opcode);
                             break;
                     }
                     break;
@@ -341,7 +345,7 @@ namespace chip8emu
                             pc += 2;
                             break;
                         default:
-                            Console.WriteLine("Unknown opcode: 0x{0}", opcode.ToString("X"));
+                            unknownOpCode(opcode);
                             break;
                     }
                     break;
@@ -350,7 +354,7 @@ namespace chip8emu
 
 
                 default:
-                    Console.WriteLine("Unknown opcode: 0x{0}", opcode.ToString("X"));
+                    unknownOpCode(opcode);
                     break;
             }
         }
